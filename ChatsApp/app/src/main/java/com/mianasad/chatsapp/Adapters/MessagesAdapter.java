@@ -69,35 +69,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = messages.get(position);
-
-        int reactions[] = new int[]{
-                R.drawable.ic_fb_like,
-                R.drawable.ic_fb_love,
-                R.drawable.ic_fb_laugh,
-                R.drawable.ic_fb_wow,
-                R.drawable.ic_fb_sad,
-                R.drawable.ic_fb_angry
-        };
-
-        ReactionsConfig config = new ReactionsConfigBuilder(context)
-                .withReactions(reactions)
-                .build();
-
-        ReactionPopup popup = new ReactionPopup(context, config, (pos) -> {
-            if(holder.getClass() == SentViewHolder.class) {
-                SentViewHolder viewHolder = (SentViewHolder)holder;
-                viewHolder.binding.feeling.setImageResource(reactions[pos]);
-                viewHolder.binding.feeling.setVisibility(View.VISIBLE);
-            } else {
-                ReceiverViewHolder viewHolder = (ReceiverViewHolder)holder;
-                viewHolder.binding.feeling.setImageResource(reactions[pos]);
-                viewHolder.binding.feeling.setVisibility(View.VISIBLE);
-
-
-            }
-
-            message.setFeeling(pos);
-
             FirebaseDatabase.getInstance().getReference()
                     .child("chats")
                     .child(senderRoom)
@@ -109,11 +80,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                     .child(receiverRoom)
                     .child("messages")
                     .child(message.getMessageId()).setValue(message);
-
-
-
-            return true; // true is closing popup, false is requesting a new selection
-        });
 
 
         if(holder.getClass() == SentViewHolder.class) {
@@ -129,29 +95,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             }
 
             viewHolder.binding.message.setText(message.getMessage());
-
-            if(message.getFeeling() >= 0) {
-                viewHolder.binding.feeling.setImageResource(reactions[message.getFeeling()]);
-                viewHolder.binding.feeling.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.binding.feeling.setVisibility(View.GONE);
-            }
-
-            viewHolder.binding.message.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    popup.onTouch(v, event);
-                    return false;
-                }
-            });
-
-            viewHolder.binding.image.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    popup.onTouch(v, event);
-                    return false;
-                }
-            });
 
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -219,29 +162,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             }
             viewHolder.binding.message.setText(message.getMessage());
 
-            if(message.getFeeling() >= 0) {
-                //message.setFeeling(reactions[message.getFeeling()]);
-                viewHolder.binding.feeling.setImageResource(reactions[message.getFeeling()]);
-                viewHolder.binding.feeling.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.binding.feeling.setVisibility(View.GONE);
-            }
-
-            viewHolder.binding.message.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    popup.onTouch(v, event);
-                    return false;
-                }
-            });
-
-            viewHolder.binding.image.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    popup.onTouch(v, event);
-                    return false;
-                }
-            });
 
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
